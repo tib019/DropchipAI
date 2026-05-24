@@ -6,6 +6,9 @@ import os
 import sys
 from pathlib import Path
 
+# Get allowed origins from environment, default to localhost for development
+allowed_origins = os.environ.get("ALLOWED_ORIGINS", "http://localhost:3000,http://localhost:5173").split(",")
+
 # Add the current directory to Python path for imports
 current_dir = Path(__file__).parent
 sys.path.insert(0, str(current_dir))
@@ -28,10 +31,10 @@ app = FastAPI(title="DropchipAI API", version="1.0.0")
 # CORS configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # In production, specify exact origins
+    allow_origins=allowed_origins,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=["Authorization", "Content-Type", "Accept"],
 )
 
 # Include routers
